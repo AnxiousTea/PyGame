@@ -71,8 +71,8 @@ class Stats(pygame.sprite.Sprite):
 
     def DrawBar(pos, size, borderC, barC, progress, screen):
         pygame.draw.rect(screen, borderC, (*pos, *size), 1)
-        innerPos = (pos[0] + 3, pos[1] + 3)
-        innerSize = ((size[0] - 6) * progress, size[1] - 6)
+        innerSize = (size[0] - 6, (size[1] - 6) * progress)
+        innerPos = (pos[0] + 3, (pos[1] + (size[1] - int(innerSize[1]) - 6) + 3))
         pygame.draw.rect(screen, barC, (*innerPos, *innerSize))
 
 
