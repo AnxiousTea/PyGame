@@ -35,6 +35,11 @@ def going_out():
         mbackground_sprites.draw(screen)
         mbackground_sprites.update()
         background_sprites.draw(screen)
+        st_sprites.draw(screen)
+        Stats.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), 0.5, screen)
+        Stats.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), 0.5, screen)
+        m_sprites.draw(screen)
+        m_sprites.update(m_sprites)
         npc_sprites.draw(screen)
         if npc.rect.x < 407:
             npc_sprites.update()
@@ -49,9 +54,14 @@ def quest():
     while go:
         for event_start in pygame.event.get():
             if event_start.type == pygame.QUIT:
-                return
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                print(event.pos)
+                terminate()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_y:
+                    print(357)
+                if event.key == pygame.K_y:
+                    print(73830)
+                if event.key == pygame.K_SPACE:
+                    print(74357697955445)
         mbackground_sprites.draw(screen)
         mbackground_sprites.update()
         background_sprites.draw(screen)

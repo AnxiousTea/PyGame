@@ -100,7 +100,7 @@ class NPC(pygame.sprite.Sprite):
             else:
                 self.dir = 1
             self.rect.y += self.dir
-            self.rect.x += 2
+            self.rect.x += 50
             self.i += 1
             if self.i % 7 == 0:
                 self.rect.y -= 1
@@ -113,7 +113,9 @@ class Text(pygame.sprite.Sprite):
         self.rect.x = 5
         self.rect.y = 510
         self.font = pygame.font.SysFont("Arial", 18)
-        self.textSurf = self.font.render('hello', 1, 'black')
+        self.textSurf = self.font.render('hfoufubewpfibfi', 1, 'black')
+        self.textS = self.font.render('Bunny Maid', 1, 'black')
         W = self.textSurf.get_width()
         H = self.textSurf.get_height()
         self.image.blit(self.textSurf, [400 / 2 - W / 2, 164 / 2 - H / 2])
+        self.image.blit(self.textS, [34, 20])
