@@ -78,7 +78,7 @@ m_b(mbackground_sprites)
 background(background_sprites, 'castle.png', 0, -70)
 background(background_sprites, gen, 330, -45)
 Stats(screen, 'Heart.png', 759, 125, st_sprites)
-Stats(screen, 'Leaf.png', 525,128, st_sprites)
+Stats(screen, 'Leaf.png', 530, 115, st_sprites)
 
 for _ in range(50):
     Money(m_sprites)

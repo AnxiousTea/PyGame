@@ -69,6 +69,9 @@ class Stats(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+    def update(self):
+        pass
+
 
 class NPC(pygame.sprite.Sprite):
     def __init__(self, name, side, b):
