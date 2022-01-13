@@ -69,8 +69,12 @@ class Stats(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-    def update(self):
-        pass
+    def DrawBar(pos, size, borderC, barC, progress, screen):
+        pygame.draw.rect(screen, borderC, (*pos, *size), 1)
+        innerPos = (pos[0] + 3, pos[1] + 3)
+        innerSize = ((size[0] - 6) * progress, size[1] - 6)
+        pygame.draw.rect(screen, barC, (*innerPos, *innerSize))
+
 
 
 class NPC(pygame.sprite.Sprite):

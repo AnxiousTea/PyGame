@@ -77,8 +77,8 @@ knd = 'm_f_b.png'
 m_b(mbackground_sprites)
 background(background_sprites, 'castle.png', 0, -70)
 background(background_sprites, gen, 330, -45)
-Stats(screen, 'Heart.png', 759, 125, st_sprites)
-Stats(screen, 'Leaf.png', 530, 115, st_sprites)
+Stats(screen, 'Heart.png', 724, 123, st_sprites)
+Stats(screen, 'Leaf.png', 539, 115, st_sprites)
 
 for _ in range(50):
     Money(m_sprites)
@@ -102,6 +102,8 @@ while running:
     mbackground_sprites.update()
     background_sprites.draw(screen)
     st_sprites.draw(screen)
+    Stats.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), 1, screen)
+    Stats.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), 1, screen)
     m_sprites.draw(screen)
     m_sprites.update(m_sprites)
     pygame.display.flip()
