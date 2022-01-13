@@ -80,7 +80,7 @@ background(background_sprites, gen, 330, -45)
 Stats(screen, 'Heart.png', 724, 123, st_sprites)
 Stats(screen, 'Leaf.png', 539, 115, st_sprites)
 
-for _ in range(50):
+for _ in range(70):
     Money(m_sprites)
 
 while running:

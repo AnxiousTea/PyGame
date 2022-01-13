@@ -15,22 +15,28 @@ def load_image(name, colorkey=None):
     return image
 
 class Money(pygame.sprite.Sprite):
+
     def __init__(self, b):
         super().__init__(b)
-        self.image = load_image('coin.png')
+        self.fire = [load_image('coin.png')]
+        self.image = random.choice(self.fire)
         self.rect = self.image.get_rect()
         a = (491, 598)
         b = (705, 802)
-        c = random.choices([491, 705])
-        if c == [491]:
-            self.rect.x = random.randrange(400, 515)
+        self.velocity = [0, random.randrange(1, 10)]
+        c = random.choices([529, 578])
+        self.gravity = 2
+        self.position = random.randrange(550, 560)
+        if c == [529]:
+            self.rect.x = random.randrange(451, 550)
         else:
-            self.rect.x = random.randrange(690, 802)
+            self.rect.x = random.randrange(725, 812)
         self.rect.y = random.randrange(-20, -5)
 
     def update(self, b):
-        if self.rect.y < random.randrange(300, 510):
-            self.rect.y += random.randrange(30, 40)
+        self.velocity[1] += self.gravity
+        if self.rect.y < self.position - self.velocity[1]:
+            self.rect.y += self.velocity[1]
 
 
 
