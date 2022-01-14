@@ -44,24 +44,18 @@ def going_out():
         if npc.rect.x < 407:
             npc_sprites.update()
         else:
-            quest()
+            return
         pygame.display.flip()
         clock.tick(40)
 
 def quest():
     text = Text(text_sprites)
-    go = True
-    while go:
+    while True:
         for event_start in pygame.event.get():
             if event_start.type == pygame.QUIT:
                 terminate()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_y:
-                    print(357)
-                if event.key == pygame.K_y:
-                    print(73830)
-                if event.key == pygame.K_SPACE:
-                    print(74357697955445)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                print(7333)
         mbackground_sprites.draw(screen)
         mbackground_sprites.update()
         background_sprites.draw(screen)
@@ -69,6 +63,7 @@ def quest():
         npc_sprites.draw(screen)
         pygame.display.flip()
         clock.tick(40)
+
 
 pygame.init()
 size = width, height = 1272, 807
@@ -105,6 +100,7 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 going_out()
+                quest()
         if event.type == pygame.MOUSEBUTTONDOWN:
             print(event.pos)
     screen.fill('white')

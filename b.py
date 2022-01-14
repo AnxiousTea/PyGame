@@ -100,7 +100,7 @@ class NPC(pygame.sprite.Sprite):
             else:
                 self.dir = 1
             self.rect.y += self.dir
-            self.rect.x += 50
+            self.rect.x += 3
             self.i += 1
             if self.i % 7 == 0:
                 self.rect.y -= 1
