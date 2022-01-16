@@ -74,10 +74,12 @@ class Stats(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.i = 0.5
 
-    def DrawBar(pos, size, borderC, barC, progress, screen):
+    def DrawBar(self, pos, size, borderC, barC, ch, screen):
         pygame.draw.rect(screen, borderC, (*pos, *size), 1)
-        innerSize = (size[0] - 6, (size[1] - 6) * progress)
+        self.i = self.i + ch
+        innerSize = (size[0] - 6, (size[1] - 6) * self.i)
         innerPos = (pos[0] + 3, (pos[1] + (size[1] - int(innerSize[1]) - 6) + 3))
         pygame.draw.rect(screen, barC, (*innerPos, *innerSize))
 
@@ -103,17 +105,17 @@ class NPC(pygame.sprite.Sprite):
             self.rect.x += 3
             self.i += 1
             if self.i % 7 == 0:
-                self.rect.y -= 1
+                self.rect.y -= 2
 
 class Text(pygame.sprite.Sprite):
-    def __init__(self, b):
+    def __init__(self, b, t):
         super().__init__(b)
         self.image = load_image('text.png')
         self.rect = self.image.get_rect()
         self.rect.x = 5
         self.rect.y = 510
         self.font = pygame.font.SysFont("Arial", 18)
-        self.textSurf = self.font.render('hfoufubewpfibfi', 1, 'black')
+        self.textSurf = self.font.render(t, 1, 'black')
         self.textS = self.font.render('Bunny Maid', 1, 'black')
         W = self.textSurf.get_width()
         H = self.textSurf.get_height()

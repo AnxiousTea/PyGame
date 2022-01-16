@@ -29,15 +29,15 @@ def going_out():
     npc = NPC('bunny.png', 0, npc_sprites)
     go = True
     while go:
-        for event_start in pygame.event.get():
-            if event_start.type == pygame.QUIT:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 return
         mbackground_sprites.draw(screen)
         mbackground_sprites.update()
         background_sprites.draw(screen)
         st_sprites.draw(screen)
-        Stats.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), 0.5, screen)
-        Stats.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), 0.5, screen)
+        pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), 0, screen)
+        blue.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), 0, screen)
         m_sprites.draw(screen)
         m_sprites.update(m_sprites)
         npc_sprites.draw(screen)
@@ -49,17 +49,49 @@ def going_out():
         clock.tick(40)
 
 def quest():
-    text = Text(text_sprites)
+    text = Text(text_sprites, 'bdhiwwb')
+    ch = 0
+    flag = False
     while True:
-        for event_start in pygame.event.get():
-            if event_start.type == pygame.QUIT:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 terminate()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                print(7333)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_y and flag is False:
+                    ch = 0.2
+                    pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), ch, screen)
+                    text = (text_sprites, 'yryryr')
+                    flaf = False
+                elif event.key == pygame.K_n and flag is False:
+                    ch = -0.3
+                    text = (text_sprites, 'iejedeu')
+                    flag = True
+                if event.key == pygame.K_SPACE and flag is True:
+                    going_back()
         mbackground_sprites.draw(screen)
         mbackground_sprites.update()
         background_sprites.draw(screen)
+        st_sprites.draw(screen)
+        pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), 0, screen)
+        blue.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), 0, screen)
         text_sprites.draw(screen)
+        npc_sprites.draw(screen)
+        pygame.display.flip()
+        clock.tick(40)
+
+def going_back():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
+        mbackground_sprites.draw(screen)
+        mbackground_sprites.update()
+        background_sprites.draw(screen)
+        st_sprites.draw(screen)
+        pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), 0, screen)
+        blue.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), 0, screen)
+        m_sprites.draw(screen)
+        m_sprites.update(m_sprites)
         npc_sprites.draw(screen)
         pygame.display.flip()
         clock.tick(40)
@@ -73,6 +105,7 @@ mbackground_sprites = pygame.sprite.Group()
 npc_sprites = pygame.sprite.Group()
 text_sprites = pygame.sprite.Group()
 m_sprites = pygame.sprite.Group()
+st_sprites = pygame.sprite.Group()
 clock = pygame.time.Clock()
 st_sprites = pygame.sprite.Group()
 FPS = 50
@@ -82,8 +115,8 @@ knd = 'm_f_b.png'
 m_b(mbackground_sprites)
 background(background_sprites, 'castle.png', 0, -70)
 background(background_sprites, gen, 330, -45)
-Stats(screen, 'Heart.png', 724, 123, st_sprites)
-Stats(screen, 'Leaf.png', 539, 115, st_sprites)
+pink = Stats(screen, 'Heart.png', 724, 123, st_sprites)
+blue = Stats(screen, 'Leaf.png', 539, 115, st_sprites)
 
 for _ in range(70):
     Money(m_sprites)
@@ -108,8 +141,8 @@ while running:
     mbackground_sprites.update()
     background_sprites.draw(screen)
     st_sprites.draw(screen)
-    Stats.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), 0.5, screen)
-    Stats.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), 0.5, screen)
+    pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), 0, screen)
+    blue.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), 0, screen)
     m_sprites.draw(screen)
     m_sprites.update(m_sprites)
     pygame.display.flip()
