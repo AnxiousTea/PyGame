@@ -26,6 +26,7 @@ def load_image(name, colorkey=None):
     return image
 
 def going_out():
+    flag = False
     npc = NPC('bunny.png', 0, npc_sprites)
     go = True
     while go:
@@ -41,10 +42,15 @@ def going_out():
         m_sprites.draw(screen)
         m_sprites.update(m_sprites)
         npc_sprites.draw(screen)
-        if npc.rect.x < 407:
-            npc_sprites.update()
-        else:
+        if npc.rect.x > 407 and flag is False:
+            quest()
+            flag = True
+        if npc.rect.x < -85:
             return
+        if flag is False:
+            npc.update()
+        elif flag is True:
+            npc.update2('bunny.png')
         pygame.display.flip()
         clock.tick(40)
 
@@ -61,13 +67,14 @@ def quest():
                     ch = 0.2
                     pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), ch, screen)
                     text = (text_sprites, 'yryryr')
-                    flaf = False
+                    flaf = True
                 elif event.key == pygame.K_n and flag is False:
                     ch = -0.3
+                    blue.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), ch, screen)
                     text = (text_sprites, 'iejedeu')
                     flag = True
                 if event.key == pygame.K_SPACE and flag is True:
-                    going_back()
+                    return
         mbackground_sprites.draw(screen)
         mbackground_sprites.update()
         background_sprites.draw(screen)
@@ -80,6 +87,7 @@ def quest():
         clock.tick(40)
 
 def going_back():
+    flag = True
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -91,6 +99,7 @@ def going_back():
         pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), 0, screen)
         blue.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), 0, screen)
         m_sprites.draw(screen)
+        npc_sprites.update(flag)
         m_sprites.update(m_sprites)
         npc_sprites.draw(screen)
         pygame.display.flip()
@@ -117,6 +126,8 @@ background(background_sprites, 'castle.png', 0, -70)
 background(background_sprites, gen, 330, -45)
 pink = Stats(screen, 'Heart.png', 724, 123, st_sprites)
 blue = Stats(screen, 'Leaf.png', 539, 115, st_sprites)
+i = 0
+f = False
 
 for _ in range(70):
     Money(m_sprites)
@@ -133,9 +144,12 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 going_out()
-                quest()
+                f = True
         if event.type == pygame.MOUSEBUTTONDOWN:
             print(event.pos)
+    if i % 100 == 0 and f is True:
+        going_out()
+    i += 1
     screen.fill('white')
     mbackground_sprites.draw(screen)
     mbackground_sprites.update()

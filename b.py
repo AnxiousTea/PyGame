@@ -94,18 +94,34 @@ class NPC(pygame.sprite.Sprite):
         self.rect.y = 595
         self.dir = -1
         self.i = 0
+        self.velx = 3
+        self.vely = 2
 
     def update(self):
-        if self.rect.x < 407:
-            if self.i % 20 < 10:
-                self.dir = -1
-            else:
-                self.dir = 1
-            self.rect.y += self.dir
-            self.rect.x += 3
-            self.i += 1
-            if self.i % 7 == 0:
-                self.rect.y -= 2
+        if self.i % 20 < 10:
+            self.dir = -1
+        else:
+            self.dir = 1
+        self.rect.y += self.dir
+        self.rect.x += self.velx
+        self.i += 1
+        if self.i % 7 == 0:
+            self.rect.y -= self.vely
+
+    def update2(self, name):
+        self.image = pygame.transform.flip(load_image(name), True, False)
+        if self.i % 20 < 10:
+            self.dir = 1
+        else:
+            self.dir = -1
+        self.rect.y += self.dir
+        self.rect.x -= 4
+        self.i += 1
+        if self.i % 7 == 0:
+            self.rect.y += self.vely + 1
+        if self.rect.x < -80:
+            self.kill()
+
 
 class Text(pygame.sprite.Sprite):
     def __init__(self, b, t):
