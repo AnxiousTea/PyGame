@@ -28,7 +28,7 @@ def st_kingdom():
     ch_s = screen.blit(x, [428, 357])
     ch_w = screen.blit(x, [652, 357])
     ch_n = screen.blit(x, [230, 470])
-    ch_s = screen.blit(x, [855, 470])
+    ch_c = screen.blit(x, [855, 470])
     font = pygame.font.Font("data/planet benson 2.ttf", 60)
     text = font.render("Choose your kingdom!", 1, [11, 32, 225])
     screen.blit(text, [339, 264])
@@ -49,7 +49,7 @@ def st_kingdom():
                 pos = pygame.mouse.get_pos()
                 if ch_n.collidepoint(pos):
                     pygame.mixer.Sound.play(click)
-                    return 'Nature_k.db', 'm_f_b.png'
+                    return 'Nature_k.db', 'm_f_b.png', 'data/for.mp3'
                 if ch_s.collidepoint(pos):
                     pygame.mixer.Sound.play(click)
                     return 's'
@@ -68,27 +68,26 @@ def st_gender():
     box1 = load_image('Main bx.png')
     box = screen.blit(box1, [1272 / 2 - 550, 807 / 2 - 231])
     x = load_image('Text_b_b.png')
-    q = screen.blit(x, [279, 388])
-    k = screen.blit(x, [721, 388])
+    x2 = load_image('Text_b_b.png')
+    k = screen.blit(x2, (721, 388))
+    q = screen.blit(x, (279, 388))
     font = pygame.font.Font("data/planet benson 2.ttf", 60)
     text = font.render("Are you a king or queen?", 1, [11, 32, 225])
     screen.blit(text, [295, 290])
     font = pygame.font.Font("data/planet benson 2.ttf", 55)
-    text = font.render("Queen", 1, [202, 11, 20])
-    screen.blit(text, [339, 435])
-    text = font.render("King", 1, [202, 11, 20])
-    screen.blit(text, [799, 435])
+    text = font.render("King", 1, (202, 11, 20))
+    screen.blit(text, (358, 435))
+    text = font.render("Queen", 1, (202, 11, 20))
+    screen.blit(text, (780, 435))
     while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        for event_start in pygame.event.get():
+            if event_start.type == pygame.QUIT:
                 terminate()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if q.collidepoint(event.pos):
-                    pygame.mixer.Sound.play(click)
-                    return 'queen.png'
-                if k.collidepoint(event.pos):
-                    pygame.mixer.Sound.play(click)
-                    return 'king.png'
+            if event_start.type == pygame.MOUSEBUTTONDOWN:
+                if k.collidepoint(event_start.pos):
+                    return 'queen.png', 600, 265
+                if q.collidepoint(event_start.pos):
+                    return 'king.png', 540, 295
         clock.tick(FPS)
         pygame.display.flip()
     pygame.quit()
@@ -105,15 +104,20 @@ background_sprites = pygame.sprite.Group()
 
 click = pygame.mixer.Sound("data/Modern9.wav")
 
-bd, p_k = st_kingdom()
-p_g = st_gender()
+bd, p_k, mu= st_kingdom()
+p_g, pos_x, pos_y = st_gender()
 
 con = sqlite3.connect(bd)
 cur = con.cursor()
 
 background(background_sprites, p_k, 0, -80)
+m_b(background_sprites)
+m_b(background_sprites)
 background(background_sprites, 'castle.png', 0, -70)
-background(background_sprites, p_g, 600, 265)
+background(background_sprites, p_g, pos_x, pos_y)
+pygame.mixer.music.load(mu)
+pygame.mixer.music.set_volume(0.03)
+pygame.mixer.music.play()
 
 while running:
     for event in pygame.event.get():
@@ -121,6 +125,7 @@ while running:
             terminate()
         if event.type == pygame.MOUSEBUTTONDOWN:
             print(event.pos)
+    background_sprites.update()
     background_sprites.draw(screen)
     clock.tick(FPS)
     pygame.display.flip()
