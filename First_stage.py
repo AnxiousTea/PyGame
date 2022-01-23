@@ -81,6 +81,8 @@ def quest():
         st_sprites.draw(screen)
         pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), 0, screen)
         blue.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), 0, screen)
+        m_sprites.draw(screen)
+        m_sprites.update(m_sprites)
         text_sprites.draw(screen)
         npc_sprites.draw(screen)
         pygame.display.flip()
@@ -109,6 +111,7 @@ def going_back():
 pygame.init()
 size = width, height = 1272, 807
 screen = pygame.display.set_mode(size, pygame.RESIZABLE)
+
 background_sprites = pygame.sprite.Group()
 mbackground_sprites = pygame.sprite.Group()
 npc_sprites = pygame.sprite.Group()
@@ -117,7 +120,8 @@ m_sprites = pygame.sprite.Group()
 st_sprites = pygame.sprite.Group()
 clock = pygame.time.Clock()
 st_sprites = pygame.sprite.Group()
-FPS = 50
+
+PS = 50
 running = True
 gen = 'queen.png'
 knd = 'm_f_b.png'
