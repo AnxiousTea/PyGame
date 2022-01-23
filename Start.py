@@ -1,7 +1,8 @@
 import pygame
 import os
-import random
 import sys
+import sqlite3
+from b import background, m_b, NPC, Text, Money, Stats
 
 def terminate():
     pygame.quit()
@@ -21,35 +22,106 @@ def load_image(name, colorkey=None):
 
 def st_kingdom():
     bac = screen.blit(load_image('Bagr.png'), (0, 0))
-    box = load_image('Main bx.png')
-    box = screen.blit(box, [1272 / 2 - 500, 807 / 2 - 210])
-    ch = box.blit(load_image('Text_b.png'), [1272 / 2 - 250, 807 / 2 - 140])
+    box1 = load_image('Main bx.png')
+    box = screen.blit(box1, [1272 / 2 - 550, 807 / 2 - 231])
+    x = load_image('Text_b.png')
+    ch_s = screen.blit(x, [428, 357])
+    ch_w = screen.blit(x, [652, 357])
+    ch_n = screen.blit(x, [230, 470])
+    ch_s = screen.blit(x, [855, 470])
+    font = pygame.font.Font("data/planet benson 2.ttf", 60)
+    text = font.render("Choose your kingdom!", 1, [11, 32, 225])
+    screen.blit(text, [339, 264])
+    font = pygame.font.Font("data/planet benson 2.ttf", 40)
+    text = font.render("Nature", 1, [12, 188, 33])
+    screen.blit(text, [267, 506])
+    text = font.render("Ocean", 1, [13, 86, 221])
+    screen.blit(text, [476, 394])
+    text = font.render("Sweets", 1, [221, 32, 225])
+    screen.blit(text, [890, 506])
+    text = font.render("Desert", 1, [221, 110, 21])
+    screen.blit(text, [693, 394])
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
-            if event.type == pygame.QUIT:
-                print(event.pos)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+                if ch_n.collidepoint(pos):
+                    pygame.mixer.Sound.play(click)
+                    return 'Nature_k.db', 'm_f_b.png'
+                if ch_s.collidepoint(pos):
+                    pygame.mixer.Sound.play(click)
+                    return 's'
+                if ch_c.collidepoint(pos):
+                    pygame.mixer.Sound.play(click)
+                    return 'c'
+                if ch_w.collidepoint(pos):
+                    pygame.mixer.Sound.play(click)
+                    return 'w'
         clock.tick(FPS)
         pygame.display.flip()
     pygame.quit()
 
+def st_gender():
+    bac = screen.blit(load_image('Bagr.png'), (0, 0))
+    box1 = load_image('Main bx.png')
+    box = screen.blit(box1, [1272 / 2 - 550, 807 / 2 - 231])
+    x = load_image('Text_b_b.png')
+    q = screen.blit(x, [279, 388])
+    k = screen.blit(x, [721, 388])
+    font = pygame.font.Font("data/planet benson 2.ttf", 60)
+    text = font.render("Are you a king or queen?", 1, [11, 32, 225])
+    screen.blit(text, [295, 290])
+    font = pygame.font.Font("data/planet benson 2.ttf", 55)
+    text = font.render("Queen", 1, [202, 11, 20])
+    screen.blit(text, [339, 435])
+    text = font.render("King", 1, [202, 11, 20])
+    screen.blit(text, [799, 435])
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if q.collidepoint(event.pos):
+                    pygame.mixer.Sound.play(click)
+                    return 'queen.png'
+                if k.collidepoint(event.pos):
+                    pygame.mixer.Sound.play(click)
+                    return 'king.png'
+        clock.tick(FPS)
+        pygame.display.flip()
+    pygame.quit()
+
+
 pygame.init()
 size = width, height = 1272, 807
 screen = pygame.display.set_mode(size)
-all_sprites = pygame.sprite.Group()
 clock = pygame.time.Clock()
 FPS = 50
 running = True
 
 background_sprites = pygame.sprite.Group()
 
-st_kingdom()
+click = pygame.mixer.Sound("data/Modern9.wav")
+
+bd, p_k = st_kingdom()
+p_g = st_gender()
+
+con = sqlite3.connect(bd)
+cur = con.cursor()
+
+background(background_sprites, p_k, 0, -80)
+background(background_sprites, 'castle.png', 0, -70)
+background(background_sprites, p_g, 600, 265)
 
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             terminate()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            print(event.pos)
+    background_sprites.draw(screen)
     clock.tick(FPS)
     pygame.display.flip()
 pygame.quit()
