@@ -27,7 +27,7 @@ class Money(pygame.sprite.Sprite):
         self.velocity = [0, random.randrange(1, 10)]
         c = random.choices([529, 578])
         self.gravity = 2
-        self.position = random.randrange(550, 560) - self.pile()
+        self.position = random.randrange(550, 560) - self.pile
         if c == [529]:
             self.rect.x = random.randrange(451, 550)
         else:

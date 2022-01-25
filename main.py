@@ -65,7 +65,7 @@ def choose_knd():
             if event_start.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 if r1.collidepoint(pos):
-                    return 'n'
+                    return 'Nature_k.db', 'm_f_b.png'
                 if r2.collidepoint(pos):
                     return 's'
                 if r3.collidepoint(pos):
@@ -75,8 +75,10 @@ def choose_knd():
         pygame.display.flip()
         clock.tick(FPS)
 
+
+
 pygame.init()
-size = width, height = 1600, 700
+size = width, height = 1272, 807
 screen = pygame.display.set_mode(size)
 all_sprites = pygame.sprite.Group()
 clock = pygame.time.Clock()

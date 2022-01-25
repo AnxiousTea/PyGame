@@ -45,6 +45,9 @@ def st_kingdom():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    pygame.mixer.Sound.play(space)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 if ch_n.collidepoint(pos):
@@ -61,7 +64,6 @@ def st_kingdom():
                     return 'w'
         clock.tick(FPS)
         pygame.display.flip()
-    pygame.quit()
 
 def st_gender():
     bac = screen.blit(load_image('Bagr.png'), (0, 0))
@@ -83,15 +85,43 @@ def st_gender():
         for event_start in pygame.event.get():
             if event_start.type == pygame.QUIT:
                 terminate()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    pygame.mixer.Sound.play(space)
             if event_start.type == pygame.MOUSEBUTTONDOWN:
                 if k.collidepoint(event_start.pos):
+                    pygame.mixer.Sound.play(click)
                     return 'queen.png', 600, 265
                 if q.collidepoint(event_start.pos):
+                    pygame.mixer.Sound.play(click)
                     return 'king.png', 540, 295
         clock.tick(FPS)
         pygame.display.flip()
-    pygame.quit()
 
+def rules():
+    bac = screen.blit(load_image('Bagr.png'), (0, 0))
+    box1 = load_image('Main bx.png')
+    box = screen.blit(box1, [1272 / 2 - 550, 807 / 2 - 231])
+    font = pygame.font.Font("data/planet benson 2.ttf", 50)
+    txt = font.render("How to play?", 1, [11, 32, 225])
+    screen.blit(txt, [500, 260])
+    font = pygame.font.Font("data/planet benson 2.ttf", 45)
+    txt = font.render("Press 'y' to say YES", 1, [12, 188, 33])
+    screen.blit(txt, (435, 335))
+    txt = font.render("Press 'n' to say NO", 1, (202, 11, 20))
+    screen.blit(txt, (450, 410))
+    txt = font.render("Press space to say 'continue'", 1, [221, 110, 21])
+    screen.blit(txt, (335, 485))
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    pygame.mixer.Sound.play(space)
+                    return
+        pygame.display.flip()
+        clock.tick(FPS)
 
 pygame.init()
 size = width, height = 1272, 807
@@ -105,13 +135,16 @@ st_sprites = pygame.sprite.Group()
 m_sprites = pygame.sprite.Group()
 
 click = pygame.mixer.Sound("data/Modern9.wav")
+space = pygame.mixer.Sound("data/Abstract1.wav")
 
-bd, p_k, mu= st_kingdom()
+bd, p_k, mu = st_kingdom()
 p_g, pos_x, pos_y = st_gender()
 if p_k == 'm_f_b.png':
     colourBar = (192, 109, 137)
 else:
     colourBar = (50, 50, 50)
+
+rules()
 
 con = sqlite3.connect(bd)
 cur = con.cursor()
@@ -138,6 +171,9 @@ while running:
             terminate()
         if event.type == pygame.MOUSEBUTTONDOWN:
             print(event.pos)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                pygame.mixer.Sound.play(space)
     background_sprites.update()
     background_sprites.draw(screen)
     st_sprites.draw(screen)
