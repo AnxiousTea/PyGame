@@ -23,10 +23,11 @@ class Money(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         a = (491, 598)
         b = (705, 802)
+        self.pile = 0
         self.velocity = [0, random.randrange(1, 10)]
         c = random.choices([529, 578])
         self.gravity = 2
-        self.position = random.randrange(550, 560)
+        self.position = random.randrange(550, 560) - self.pile()
         if c == [529]:
             self.rect.x = random.randrange(451, 550)
         else:
@@ -37,6 +38,18 @@ class Money(pygame.sprite.Sprite):
         self.velocity[1] += self.gravity
         if self.rect.y < self.position - self.velocity[1]:
             self.rect.y += self.velocity[1]
+
+    def inc_pile(self):
+        self.pile += 10
+
+    def dec_pile(self):
+        if self.pile != 0:
+            self.pile -= 10
+
+    def no_m(self):
+        self.kill()
+
+
 
 
 
@@ -51,20 +64,28 @@ class background(pygame.sprite.Sprite):
             self.image = pygame.transform.scale(self.image, size)
 
 class m_b(pygame.sprite.Sprite):
+    lst = [-1, 1]
     def __init__(self, b):
         super().__init__(b)
-        self.image = load_image('m_f_b.png')
+        self.image = load_image('cloud.png')
+        self.dir = random.choice(m_b.lst)
+        del m_b.lst[m_b.lst.index(self.dir)]
         self.rect = self.image.get_rect()
-        self.rect.x = 0
-        self.rect.y = -80
-        self.dir = 0.9
-        m_b.update(self)
+        if self.dir == -1:
+            self.x = 1500
+        else:
+            self.x = -600
+        self.rect.y = random.randrange(0, 300)
 
     def update(self):
-        if self.rect.x == -10:
-            self.dir = 0
-        elif self.rect.x == 10:
-            self.dir = -0
+        if self.dir == 1:
+            if self.rect.x == 1500:
+                self.rect.x = -600
+                self.rect.y = random.randrange(0, 300)
+        else:
+            if self.rect.x == -500:
+                self.rect.x = 1500
+                self.rect.y = random.randrange(0, 300)
         self.rect.x += self.dir
 
 class Stats(pygame.sprite.Sprite):

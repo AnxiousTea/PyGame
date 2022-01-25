@@ -101,11 +101,17 @@ FPS = 50
 running = True
 
 background_sprites = pygame.sprite.Group()
+st_sprites = pygame.sprite.Group()
+m_sprites = pygame.sprite.Group()
 
 click = pygame.mixer.Sound("data/Modern9.wav")
 
 bd, p_k, mu= st_kingdom()
 p_g, pos_x, pos_y = st_gender()
+if p_k == 'm_f_b.png':
+    colourBar = (192, 109, 137)
+else:
+    colourBar = (50, 50, 50)
 
 con = sqlite3.connect(bd)
 cur = con.cursor()
@@ -115,9 +121,16 @@ m_b(background_sprites)
 m_b(background_sprites)
 background(background_sprites, 'castle.png', 0, -70)
 background(background_sprites, p_g, pos_x, pos_y)
+
 pygame.mixer.music.load(mu)
 pygame.mixer.music.set_volume(0.03)
 pygame.mixer.music.play()
+
+pink = Stats(screen, 'Heart.png', 724, 123, st_sprites)
+mix = Stats(screen, 'Leaf.png', 539, 115, st_sprites)
+
+for _ in range(100):
+    Money(m_sprites)
 
 while running:
     for event in pygame.event.get():
@@ -127,6 +140,11 @@ while running:
             print(event.pos)
     background_sprites.update()
     background_sprites.draw(screen)
+    st_sprites.draw(screen)
+    pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), 0, screen)
+    mix.DrawBar((738, 180), (20, 200), 'black', colourBar, 0, screen)
+    m_sprites.draw(screen)
+    m_sprites.update(m_sprites)
     clock.tick(FPS)
     pygame.display.flip()
 pygame.quit()

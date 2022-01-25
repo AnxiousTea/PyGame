@@ -120,8 +120,7 @@ m_sprites = pygame.sprite.Group()
 st_sprites = pygame.sprite.Group()
 clock = pygame.time.Clock()
 st_sprites = pygame.sprite.Group()
-
-PS = 50
+FPS = 50
 running = True
 gen = 'queen.png'
 knd = 'm_f_b.png'
@@ -133,7 +132,7 @@ blue = Stats(screen, 'Leaf.png', 539, 115, st_sprites)
 i = 0
 f = False
 
-for _ in range(70):
+for _ in range(100):
     Money(m_sprites)
 
 while running:
