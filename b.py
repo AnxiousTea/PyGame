@@ -49,10 +49,6 @@ class Money(pygame.sprite.Sprite):
     def no_m(self):
         self.kill()
 
-
-
-
-
 class background(pygame.sprite.Sprite):
     def __init__(self, b, name, x, y, *size):
         super().__init__(b)
@@ -111,8 +107,8 @@ class NPC(pygame.sprite.Sprite):
         super().__init__(b)
         self.image = load_image(name)
         self.rect = self.image.get_rect()
-        self.rect.x = 0
-        self.rect.y = 595
+        self.rect.x = -80
+        self.rect.y = 580
         self.dir = -1
         self.i = 0
         self.velx = 3
@@ -145,16 +141,20 @@ class NPC(pygame.sprite.Sprite):
 
 
 class Text(pygame.sprite.Sprite):
-    def __init__(self, b, t):
+    def __init__(self, b, t, n):
         super().__init__(b)
+        text = t.split("/n")
         self.image = load_image('text.png')
         self.rect = self.image.get_rect()
         self.rect.x = 5
         self.rect.y = 510
-        self.font = pygame.font.SysFont("Arial", 18)
-        self.textSurf = self.font.render(t, 1, 'black')
-        self.textS = self.font.render('Bunny Maid', 1, 'black')
-        W = self.textSurf.get_width()
-        H = self.textSurf.get_height()
-        self.image.blit(self.textSurf, [400 / 2 - W / 2, 164 / 2 - H / 2])
-        self.image.blit(self.textS, [34, 20])
+        i = 0
+        self.font = pygame.font.SysFont("Arial", 20)
+        self.textS = self.font.render(n, 1, 'black')
+        self.image.blit(self.textS, [38, 20])
+        self.font = pygame.font.SysFont("Arial", 14)
+        for line in text:
+            self.textSurf = self.font.render(line, 1, 'black')
+            intro_rect = self.textSurf.get_rect()
+            self.image.blit(self.textSurf, [45, 60 + i])
+            i += 20

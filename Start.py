@@ -85,8 +85,8 @@ def st_gender():
         for event_start in pygame.event.get():
             if event_start.type == pygame.QUIT:
                 terminate()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+            if event_start.type == pygame.KEYDOWN:
+                if event_start.key == pygame.K_SPACE:
                     pygame.mixer.Sound.play(space)
             if event_start.type == pygame.MOUSEBUTTONDOWN:
                 if k.collidepoint(event_start.pos):
@@ -123,6 +123,89 @@ def rules():
         pygame.display.flip()
         clock.tick(FPS)
 
+def going_out(ind):
+    res = cur.execute("""SELECT npc, offic_npc
+                            FROM Level1
+                            WHERE id = ?""", (ind,)).fetchall()
+    flag = False
+    npc = NPC(res[0][0], 0, npc_sprites)
+    go = True
+    while go:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
+        background_sprites.draw(screen)
+        background_sprites.update()
+        st_sprites.draw(screen)
+        pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), 0, screen)
+        mix.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), 0, screen)
+        m_sprites.draw(screen)
+        m_sprites.update(m_sprites)
+        npc_sprites.draw(screen)
+        if npc.rect.x > 407 and flag is False:
+            quest(ind, res[0][1])
+            flag = True
+        if npc.rect.x < -85:
+            return
+        if flag is False:
+            npc.update()
+        elif flag is True:
+            npc.update2(res[0][0])
+        pygame.display.flip()
+        clock.tick(40)
+
+def quest(ind, name):
+    res = cur.execute("""SELECT text, smth_op, yes_m, yes_h,
+                            yes_l, no_m, no_h, no_l, yes_text, no_text
+                            FROM Level1
+                            WHERE id = ?""", (ind,)).fetchall()
+    text = Text(text_sprites, res[0][0], name)
+    ch_p = 0
+    ch_m = 0
+    flag = False
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_y and flag is False:
+                    ch_p = res[0][3] / 100
+                    ch_m = res[0][4] / 100
+                    pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), ch_p, screen)
+                    mix.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), ch_m, screen)
+                    if res[0][2] > 0:
+                        for i in range(res[0][2]):
+                            Money(m_sprites)
+                            lst_m[i].inc_pile()
+                    elif res[0][2] < 0:
+                        for i in range(abs(res[0][2])):
+                            lst_m[i].no_m()
+                    text = (text_sprites, res[0][-2], name)
+                    if res[0][0] != 0:
+                        pass
+                    flag = True
+                elif event.key == pygame.K_n and flag is False:
+                    ch = -0.3
+                    mix.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), ch, screen)
+                    text = (text_sprites, 'iejedeu')
+                    flag = True
+                if event.key == pygame.K_SPACE:
+                    pygame.mixer.Sound.play(space)
+                    if flag is True:
+                        return
+        background_sprites.draw(screen)
+        background_sprites.update()
+        st_sprites.draw(screen)
+        pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), 0, screen)
+        mix.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), 0, screen)
+        m_sprites.draw(screen)
+        m_sprites.update(m_sprites)
+        text_sprites.draw(screen)
+        npc_sprites.draw(screen)
+        pygame.display.flip()
+        clock.tick(40)
+
+
 pygame.init()
 size = width, height = 1272, 807
 screen = pygame.display.set_mode(size)
@@ -133,6 +216,8 @@ running = True
 background_sprites = pygame.sprite.Group()
 st_sprites = pygame.sprite.Group()
 m_sprites = pygame.sprite.Group()
+npc_sprites = pygame.sprite.Group()
+text_sprites = pygame.sprite.Group()
 
 click = pygame.mixer.Sound("data/Modern9.wav")
 space = pygame.mixer.Sound("data/Abstract1.wav")
@@ -152,6 +237,7 @@ cur = con.cursor()
 background(background_sprites, p_k, 0, -80)
 m_b(background_sprites)
 m_b(background_sprites)
+lst_m = list()
 background(background_sprites, 'castle.png', 0, -70)
 background(background_sprites, p_g, pos_x, pos_y)
 
@@ -163,7 +249,10 @@ pink = Stats(screen, 'Heart.png', 724, 123, st_sprites)
 mix = Stats(screen, 'Leaf.png', 539, 115, st_sprites)
 
 for _ in range(100):
-    Money(m_sprites)
+    lst_m.append(Money(m_sprites))
+
+i = 1
+f = False
 
 while running:
     for event in pygame.event.get():
@@ -174,6 +263,12 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 pygame.mixer.Sound.play(space)
+                if f is False:
+                    f = True
+                    going_out(1)
+        if i % 100 == 0 and f is True:
+            going_out(x)
+        i += 0.5
     background_sprites.update()
     background_sprites.draw(screen)
     st_sprites.draw(screen)
