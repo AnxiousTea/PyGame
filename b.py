@@ -112,7 +112,7 @@ class NPC(pygame.sprite.Sprite):
         self.rect.y = 580
         self.dir = -1
         self.i = 0
-        self.velx = 5
+        self.velx = 6
         self.vely = 2
 
     def update(self):

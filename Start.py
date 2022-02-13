@@ -170,6 +170,7 @@ def quest(ind, name):
                 terminate()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_y and flag is False:
+                    pygame.mixer.Sound.play(yes)
                     ch_p = res[0][3] / 100
                     ch_m = res[0][4] / 100
                     pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), ch_p, screen)
@@ -183,13 +184,24 @@ def quest(ind, name):
                             lst_m[i].no_m()
                     text = Text(text_sprites, res[0][8], name)
                     pygame.mixer.Sound.play(txt)
-                    if res[0][0] != 0:
+                    if res[0][1] != 0:
                         pass
                     flag = True
                 elif event.key == pygame.K_n and flag is False:
-                    ch = -0.3
-                    mix.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), ch, screen)
-                    text = (text_sprites, 'iejedeu')
+                    pygame.mixer.Sound.play(yes)
+                    ch_p = res[0][6] / 100
+                    ch_m = res[0][7] / 100
+                    pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), ch_p, screen)
+                    mix.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), ch_m, screen)
+                    if res[0][5] > 0:
+                        for i in range(res[0][2]):
+                            Money(m_sprites)
+                            lst_m[i].inc_pile()
+                    elif res[0][5] < 0:
+                        for i in range(abs(res[0][2])):
+                            lst_m[i].no_m()
+                    text = Text(text_sprites, res[0][9], name)
+                    pygame.mixer.Sound.play(txt)
                     flag = True
                 if event.key == pygame.K_SPACE:
                     pygame.mixer.Sound.play(space)
@@ -225,6 +237,8 @@ text_sprites = pygame.sprite.Group()
 click = pygame.mixer.Sound("data/Modern9.wav")
 space = pygame.mixer.Sound("data/Abstract1.wav")
 txt = pygame.mixer.Sound("data/writing.wav")
+yes = pygame.mixer.Sound("data/yes.wav")
+no = pygame.mixer.Sound("data/no.wav")
 
 bd, p_k, mu = st_kingdom()
 p_g, pos_x, pos_y = st_gender()
