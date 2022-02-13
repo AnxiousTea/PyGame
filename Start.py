@@ -160,6 +160,7 @@ def quest(ind, name):
                             FROM Level1
                             WHERE id = ?""", (ind,)).fetchall()
     text = Text(text_sprites, res[0][0], name)
+    pygame.mixer.Sound.play(txt)
     ch_p = 0
     ch_m = 0
     flag = False
@@ -180,7 +181,8 @@ def quest(ind, name):
                     elif res[0][2] < 0:
                         for i in range(abs(res[0][2])):
                             lst_m[i].no_m()
-                    text = (text_sprites, res[0][-2], name)
+                    text = Text(text_sprites, res[0][8], name)
+                    pygame.mixer.Sound.play(txt)
                     if res[0][0] != 0:
                         pass
                     flag = True
@@ -201,6 +203,7 @@ def quest(ind, name):
         m_sprites.draw(screen)
         m_sprites.update(m_sprites)
         text_sprites.draw(screen)
+        text_sprites.update(txt)
         npc_sprites.draw(screen)
         pygame.display.flip()
         clock.tick(40)
@@ -221,6 +224,7 @@ text_sprites = pygame.sprite.Group()
 
 click = pygame.mixer.Sound("data/Modern9.wav")
 space = pygame.mixer.Sound("data/Abstract1.wav")
+txt = pygame.mixer.Sound("data/writing.wav")
 
 bd, p_k, mu = st_kingdom()
 p_g, pos_x, pos_y = st_gender()

@@ -1,6 +1,7 @@
 import pygame
 import os
 import random
+from time import *
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -111,7 +112,7 @@ class NPC(pygame.sprite.Sprite):
         self.rect.y = 580
         self.dir = -1
         self.i = 0
-        self.velx = 3
+        self.velx = 5
         self.vely = 2
 
     def update(self):
@@ -132,7 +133,7 @@ class NPC(pygame.sprite.Sprite):
         else:
             self.dir = -1
         self.rect.y += self.dir
-        self.rect.x -= 4
+        self.rect.x -= self.velx
         self.i += 1
         if self.i % 7 == 0:
             self.rect.y += self.vely + 1
@@ -143,18 +144,25 @@ class NPC(pygame.sprite.Sprite):
 class Text(pygame.sprite.Sprite):
     def __init__(self, b, t, n):
         super().__init__(b)
-        text = t.split("/n")
+        pygame.time.wait(100)
+        self.text = t.split("/n")
         self.image = load_image('text.png')
         self.rect = self.image.get_rect()
         self.rect.x = 5
         self.rect.y = 510
-        i = 0
+        self.i = 0
+        self.j = len(self.text)
         self.font = pygame.font.SysFont("Arial", 20)
         self.textS = self.font.render(n, 1, 'black')
         self.image.blit(self.textS, [38, 20])
         self.font = pygame.font.SysFont("Arial", 14)
-        for line in text:
-            self.textSurf = self.font.render(line, 1, 'black')
-            intro_rect = self.textSurf.get_rect()
-            self.image.blit(self.textSurf, [45, 60 + i])
-            i += 20
+
+    def update(self, txt):
+        try:
+            self.textSurf = self.font.render(self.text[len(self.text) - self.j], 1, 'black')
+            self.image.blit(self.textSurf, [45, 60 + self.i])
+            self.i += 20
+            self.j -= 1
+            pygame.time.wait(200)
+        except IndexError:
+            pass
