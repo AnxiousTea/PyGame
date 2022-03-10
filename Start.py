@@ -3,6 +3,7 @@ import os
 import sys
 import sqlite3
 from b import background, m_b, NPC, Text, Money, Stats
+import random
 
 def terminate():
     pygame.quit()
@@ -194,11 +195,11 @@ def quest(ind, name):
                     pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), ch_p, screen)
                     mix.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), ch_m, screen)
                     if res[0][5] > 0:
-                        for i in range(res[0][2]):
+                        for i in range(res[0][5]):
                             Money(m_sprites)
                             lst_m[i].inc_pile()
                     elif res[0][5] < 0:
-                        for i in range(abs(res[0][2])):
+                        for i in range(abs(res[0][5])):
                             lst_m[i].no_m()
                     text = Text(text_sprites, res[0][9], name)
                     pygame.mixer.Sound.play(txt)
@@ -285,6 +286,15 @@ while running:
                     f = True
                     going_out(1)
         if i % 100 == 0 and f is True:
+            x = random.randrange(2, 2)
+            res = cur.execute("""SELECT avi
+                                        FROM Level1
+                                        WHERE id = ?""", (x,)).fetchall()
+            while res[0] == 0:
+                x = random.randrange(2, 2)
+                res = cur.execute("""SELECT avi
+                                        FROM Level1
+                                        HERE id = ?""", (x,)).fetchall()
             going_out(x)
         i += 0.5
     background_sprites.update()
