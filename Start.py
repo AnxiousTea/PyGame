@@ -139,25 +139,26 @@ def going_out(ind):
         background_sprites.update()
         st_sprites.draw(screen)
         pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), 0, screen)
-        mix.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), 0, screen)
+        mix.DrawBar((738, 180), (20, 200), 'black', colourBar, 0, screen)
         m_sprites.draw(screen)
         m_sprites.update(m_sprites)
         npc_sprites.draw(screen)
+
+        if flag is False:
+            npc.update()
         if npc.rect.x > 407 and flag is False:
             quest(ind, res[0][1])
             flag = True
-        if npc.rect.x < -85:
-            return
-        if flag is False:
-            npc.update()
-        elif flag is True:
+        if flag is True:
             npc.update2(res[0][0])
+        if npc.rect.x < -100 and flag is True:
+            return
         pygame.display.flip()
         clock.tick(40)
 
 def quest(ind, name):
     res = cur.execute("""SELECT text, smth_op, yes_m, yes_h,
-                            yes_l, no_m, no_h, no_l, yes_text, no_text
+                            yes_l, no_m, no_h, no_l, yes_text, no_text, closed
                             FROM Level1
                             WHERE id = ?""", (ind,)).fetchall()
     text = Text(text_sprites, res[0][0], name)
@@ -175,7 +176,7 @@ def quest(ind, name):
                     ch_p = res[0][3] / 100
                     ch_m = res[0][4] / 100
                     pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), ch_p, screen)
-                    mix.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), ch_m, screen)
+                    mix.DrawBar((738, 180), (20, 200), 'black', colourBar, ch_m, screen)
                     if res[0][2] > 0:
                         for i in range(res[0][2]):
                             Money(m_sprites)
@@ -186,14 +187,24 @@ def quest(ind, name):
                     text = Text(text_sprites, res[0][8], name)
                     pygame.mixer.Sound.play(txt)
                     if res[0][1] != 0:
-                        pass
+                        que = """UPDATE Level1 
+                                        SET avi = 1
+                                        WHERE id = ?"""
+                        cur.execute(que, (res[0][1]),)
+                        con.commit()
+                    if res[0][10] != 0:
+                        que = """UPDATE Level1 
+                                        SET avi = 0
+                                        WHERE id = ?"""
+                        cur.execute(que, (ind,))
+                        con.commit()
                     flag = True
-                elif event.key == pygame.K_n and flag is False:
+                if event.key == pygame.K_n and (flag is False):
                     pygame.mixer.Sound.play(yes)
                     ch_p = res[0][6] / 100
                     ch_m = res[0][7] / 100
                     pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), ch_p, screen)
-                    mix.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), ch_m, screen)
+                    mix.DrawBar((738, 180), (20, 200), 'black', colourBar, ch_m, screen)
                     if res[0][5] > 0:
                         for i in range(res[0][5]):
                             Money(m_sprites)
@@ -204,6 +215,12 @@ def quest(ind, name):
                     text = Text(text_sprites, res[0][9], name)
                     pygame.mixer.Sound.play(txt)
                     flag = True
+                    if res[0][10] != 0:
+                        que = """UPDATE Level1 
+                                        SET avi = 0
+                                        WHERE id = ?"""
+                        cur.execute(que, (ind,))
+                        con.commit()
                 if event.key == pygame.K_SPACE:
                     pygame.mixer.Sound.play(space)
                     if flag is True:
@@ -212,7 +229,7 @@ def quest(ind, name):
         background_sprites.update()
         st_sprites.draw(screen)
         pink.DrawBar((544, 180), (20, 200), 'black', (106, 154, 145), 0, screen)
-        mix.DrawBar((738, 180), (20, 200), 'black', (192, 109, 137), 0, screen)
+        mix.DrawBar((738, 180), (20, 200), 'black', colourBar, 0, screen)
         m_sprites.draw(screen)
         m_sprites.update(m_sprites)
         text_sprites.draw(screen)
@@ -257,7 +274,7 @@ background(background_sprites, p_k, 0, -80)
 m_b(background_sprites)
 m_b(background_sprites)
 lst_m = list()
-background(background_sprites, 'castle.png', 0, -70)
+background(background_sprites, 'castle.png', 0, -40)
 background(background_sprites, p_g, pos_x, pos_y)
 
 pygame.mixer.music.load(mu)
@@ -285,18 +302,18 @@ while running:
                 if f is False:
                     f = True
                     going_out(1)
-        if i % 100 == 0 and f is True:
-            x = random.randrange(2, 2)
+        if f is True:
+            pygame.mixer.Sound.play(space)
+            x = random.randrange(2, 3)
             res = cur.execute("""SELECT avi
                                         FROM Level1
                                         WHERE id = ?""", (x,)).fetchall()
-            while res[0] == 0:
-                x = random.randrange(2, 2)
+            while res[0][0] != 1:
+                x = random.randrange(2, 3)
                 res = cur.execute("""SELECT avi
                                         FROM Level1
                                         HERE id = ?""", (x,)).fetchall()
             going_out(x)
-        i += 0.5
     background_sprites.update()
     background_sprites.draw(screen)
     st_sprites.draw(screen)

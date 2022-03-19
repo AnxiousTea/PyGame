@@ -97,6 +97,10 @@ class Stats(pygame.sprite.Sprite):
     def DrawBar(self, pos, size, borderC, barC, ch, screen):
         pygame.draw.rect(screen, borderC, (*pos, *size), 1)
         self.i = self.i + ch
+        if (size[1] - 6) * self.i >= size[1]:
+            self.i = 1
+        elif (size[1] - 6) * self.i <= 0:
+            self.i = 0
         innerSize = (size[0] - 6, (size[1] - 6) * self.i)
         innerPos = (pos[0] + 3, (pos[1] + (size[1] - int(innerSize[1]) - 6) + 3))
         pygame.draw.rect(screen, barC, (*innerPos, *innerSize))
@@ -137,7 +141,7 @@ class NPC(pygame.sprite.Sprite):
         self.i += 1
         if self.i % 7 == 0:
             self.rect.y += self.vely + 1
-        if self.rect.x < -80:
+        if self.rect.x < -90:
             self.kill()
 
 
