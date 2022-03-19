@@ -215,12 +215,6 @@ def quest(ind, name):
                     text = Text(text_sprites, res[0][9], name)
                     pygame.mixer.Sound.play(txt)
                     flag = True
-                    if res[0][10] != 0:
-                        que = """UPDATE Level1 
-                                        SET avi = 0
-                                        WHERE id = ?"""
-                        cur.execute(que, (ind,))
-                        con.commit()
                 if event.key == pygame.K_SPACE:
                     pygame.mixer.Sound.play(space)
                     if flag is True:
