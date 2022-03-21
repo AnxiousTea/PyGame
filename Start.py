@@ -2,7 +2,7 @@ import pygame
 import os
 import sys
 import sqlite3
-from b import background, m_b, NPC, Text, Money, Stats
+from Class import background, m_b, NPC, Text, Money, Stats
 import random
 
 def terminate():
@@ -29,7 +29,7 @@ def st_kingdom():
     ch_s = screen.blit(x, [428, 357])
     ch_w = screen.blit(x, [652, 357])
     ch_n = screen.blit(x, [230, 470])
-    ch_c = screen.blit(x, [855, 470])
+    ch_c = screen.blit(x, [855, 471])
     font = pygame.font.Font("data/planet benson 2.ttf", 60)
     text = font.render("Choose your kingdom!", 1, [11, 32, 225])
     screen.blit(text, [339, 264])
@@ -44,11 +44,6 @@ def st_kingdom():
     screen.blit(text, [693, 394])
     while True:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sql = 'DELETE FROM Copy_base'
-                cur.execute(sql)
-                con.commit()
-                terminate()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     pygame.mixer.Sound.play(space)
@@ -59,13 +54,13 @@ def st_kingdom():
                     return 'Nature_k.db', 'm_f_b.png', 'data/for.mp3'
                 if ch_s.collidepoint(pos):
                     pygame.mixer.Sound.play(click)
-                    return 's'
+                    return 'Ocean_k.db', 'm_s_b.png', 'data/sea.mp3'
                 if ch_c.collidepoint(pos):
                     pygame.mixer.Sound.play(click)
-                    return 'c'
+                    return 'Sweets_k.db', 'm_c_b.png', 'data/sweets.mp3'
                 if ch_w.collidepoint(pos):
                     pygame.mixer.Sound.play(click)
-                    return 'w'
+                    return 'Desert_k.db', 'm_d_b.png', 'data/desert.mp3'
         clock.tick(FPS)
         pygame.display.flip()
 
@@ -87,11 +82,6 @@ def st_gender():
     screen.blit(text, (780, 435))
     while True:
         for event_start in pygame.event.get():
-            if event_start.type == pygame.QUIT:
-                sql = 'DELETE FROM Copy_base'
-                cur.execute(sql)
-                con.commit()
-                terminate()
             if event_start.type == pygame.KEYDOWN:
                 if event_start.key == pygame.K_SPACE:
                     pygame.mixer.Sound.play(space)
@@ -121,11 +111,6 @@ def rules():
     screen.blit(txt, (335, 485))
     while True:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sql = 'DELETE FROM Copy_base'
-                cur.execute(sql)
-                con.commit()
-                terminate()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     pygame.mixer.Sound.play(space)
@@ -142,11 +127,6 @@ def going_out(ind):
     go = True
     while go:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sql = 'DELETE FROM Copy_base'
-                cur.execute(sql)
-                con.commit()
-                terminate()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     menu()
@@ -166,7 +146,7 @@ def going_out(ind):
             flag = True
         if flag is True:
             npc.update2(res[0][0])
-        if npc.rect.x < -100 and flag is True:
+        if npc.rect.x < -450 and flag is True:
             return
         pygame.display.flip()
         clock.tick(40)
@@ -183,11 +163,6 @@ def quest(ind, name):
     flag = False
     while True:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sql = 'DELETE FROM Copy_base'
-                cur.execute(sql)
-                con.commit()
-                terminate()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_y and flag is False:
                     pygame.mixer.Sound.play(yes)
@@ -208,7 +183,7 @@ def quest(ind, name):
                         que = """UPDATE Copy_base 
                                         SET avi = 1
                                         WHERE id = ?"""
-                        cur.execute(que, (res[0][1]),)
+                        cur.execute(que, (res[0][1],))
                         con.commit()
                     if res[0][10] != 0:
                         que = """UPDATE Copy_base 
@@ -290,47 +265,6 @@ def menu():
         clock.tick(FPS)
         pygame.display.flip()
 
-def game_over():
-    box1 = load_image('Main bx.png')
-    box = screen.blit(box1, [1272 / 2 - 550, 807 / 2 - 231])
-    x = load_image('Text_b_b.png')
-    x2 = load_image('Text_b_b.png')
-    k = screen.blit(x2, (721, 388))
-    q = screen.blit(x, (279, 388))
-    font = pygame.font.Font("data/planet benson 2.ttf", 70)
-    text = font.render("______GAME OVER______", 1, [11, 32, 225])
-    screen.blit(text, [370, 290])
-    font = pygame.font.Font("data/planet benson 2.ttf", 50)
-    text = font.render("Restart", 1, (202, 11, 20))
-    screen.blit(text, (328, 435))
-    text = font.render("Restart", 1, (202, 11, 20))
-    screen.blit(text, (774, 435))
-    while True:
-        for event_start in pygame.event.get():
-            if event_start.type == pygame.QUIT:
-                sql = 'DELETE FROM Copy_base'
-                cur.execute(sql)
-                con.commit()
-                terminate()
-            if event_start.type == pygame.KEYDOWN:
-                if event_start.key == pygame.K_SPACE:
-                    pygame.mixer.Sound.play(space)
-            if event_start.type == pygame.MOUSEBUTTONDOWN:
-                if k.collidepoint(event_start.pos):
-                    pygame.mixer.Sound.play(click)
-                    sql = 'DELETE FROM Copy_base'
-                    cur.execute(sql)
-                    con.commit()
-                    os.execv(sys.argv[0], sys.argv)
-                if q.collidepoint(event_start.pos):
-                    pygame.mixer.Sound.play(click)
-                    sql = 'DELETE FROM Copy_base'
-                    cur.execute(sql)
-                    con.commit()
-                    os.execv(sys.argv[0], sys.argv)
-        clock.tick(FPS)
-        pygame.display.flip()
-
 pygame.init()
 size = width, height = 1272, 807
 screen = pygame.display.set_mode(size)
@@ -357,14 +291,11 @@ if p_k == 'm_f_b.png':
 else:
     colourBar = (50, 50, 50)
 
-rules()
-
 con = sqlite3.connect(bd)
 cur = con.cursor()
 req = 'INSERT INTO Copy_base SELECT * FROM Level1'
 cur.execute(req)
 con.commit()
-
 
 background(background_sprites, p_k, 0, -80)
 m_b(background_sprites)
@@ -376,9 +307,11 @@ background(background_sprites, p_g, pos_x, pos_y)
 pygame.mixer.music.load(mu)
 pygame.mixer.music.set_volume(0.03)
 pygame.mixer.music.play(-1)
-game_over()
+
 pink = Stats(screen, 'Heart.png', 724, 123, st_sprites)
 mix = Stats(screen, 'Leaf.png', 539, 115, st_sprites)
+
+rules()
 
 for _ in range(100):
     lst_m.append(Money(m_sprites))
@@ -388,13 +321,6 @@ f = False
 
 while running:
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            sql = 'DELETE FROM Copy_base'
-            cur.execute(sql)
-            con.commit()
-            terminate()
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            print(event.pos)
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 pygame.mixer.Sound.play(space)
@@ -404,7 +330,6 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 menu()
     if f is True:
-        pygame.mixer.Sound.play(space)
         x = random.randrange(2, 70)
         res = cur.execute("""SELECT avi
                                     FROM Copy_base
@@ -415,8 +340,6 @@ while running:
                                     FROM Copy_base
                                     WHERE id = ?""", (x,)).fetchall()
         going_out(x)
-    if pink.f == 0 or mix.f == 0:
-        game_over()
     background_sprites.update()
     background_sprites.draw(screen)
     st_sprites.draw(screen)

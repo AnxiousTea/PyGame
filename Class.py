@@ -119,7 +119,7 @@ class NPC(pygame.sprite.Sprite):
         self.rect.y = 580
         self.dir = -1
         self.i = 0
-        self.velx = 8
+        self.velx = 10
         self.vely = 2
 
     def update(self):
@@ -144,7 +144,7 @@ class NPC(pygame.sprite.Sprite):
         self.i += 1
         if self.i % 7 == 0:
             self.rect.y += self.vely + 1
-        if self.rect.x < -90:
+        if self.rect.x < -450:
             self.kill()
 
 
