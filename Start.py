@@ -6,6 +6,9 @@ from Class import background, m_b, NPC, Text, Money, Stats
 import random
 
 def terminate():
+    sql = 'DELETE FROM Copy_base'
+    cur.execute(sql)
+    con.commit()
     pygame.quit()
     sys.exit()
 
@@ -44,6 +47,8 @@ def st_kingdom():
     screen.blit(text, [693, 394])
     while True:
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     pygame.mixer.Sound.play(space)
@@ -51,16 +56,16 @@ def st_kingdom():
                 pos = pygame.mouse.get_pos()
                 if ch_n.collidepoint(pos):
                     pygame.mixer.Sound.play(click)
-                    return 'Nature_k.db', 'm_f_b.png', 'data/for.mp3'
+                    return 'Nature_k.db', 'm_f_b.png', 'data/for.mp3', 'Leaf.png'
                 if ch_s.collidepoint(pos):
                     pygame.mixer.Sound.play(click)
-                    return 'Ocean_k.db', 'm_s_b.png', 'data/sea.mp3'
+                    return 'Ocean_k.db', 'm_s_b.png', 'data/sea.mp3', ''
                 if ch_c.collidepoint(pos):
                     pygame.mixer.Sound.play(click)
-                    return 'Sweets_k.db', 'm_c_b.png', 'data/sweets.mp3'
+                    return 'Sweets_k.db', 'm_c_b.png', 'data/sweets.mp3', ''
                 if ch_w.collidepoint(pos):
                     pygame.mixer.Sound.play(click)
-                    return 'Desert_k.db', 'm_d_b.png', 'data/desert.mp3'
+                    return 'Desert_k.db', 'm_d_b.png', 'data/desert.mp3', ''
         clock.tick(FPS)
         pygame.display.flip()
 
@@ -82,6 +87,8 @@ def st_gender():
     screen.blit(text, (780, 435))
     while True:
         for event_start in pygame.event.get():
+            if event_start.type == pygame.QUIT:
+                terminate()
             if event_start.type == pygame.KEYDOWN:
                 if event_start.key == pygame.K_SPACE:
                     pygame.mixer.Sound.play(space)
@@ -111,6 +118,8 @@ def rules():
     screen.blit(txt, (335, 485))
     while True:
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     pygame.mixer.Sound.play(space)
@@ -127,6 +136,8 @@ def going_out(ind):
     go = True
     while go:
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     menu()
@@ -163,6 +174,8 @@ def quest(ind, name):
     flag = False
     while True:
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_y and flag is False:
                     pygame.mixer.Sound.play(yes)
@@ -245,9 +258,6 @@ def menu():
     while True:
         for event_start in pygame.event.get():
             if event_start.type == pygame.QUIT:
-                sql = 'DELETE FROM Copy_base'
-                cur.execute(sql)
-                con.commit()
                 terminate()
             if event_start.type == pygame.KEYDOWN:
                 if event_start.key == pygame.K_SPACE:
@@ -284,12 +294,20 @@ txt = pygame.mixer.Sound("data/writing.wav")
 yes = pygame.mixer.Sound("data/yes.wav")
 no = pygame.mixer.Sound("data/no.wav")
 
-bd, p_k, mu = st_kingdom()
+while True:
+    bd, p_k, mu, st = st_kingdom()
+    if p_k == 'm_f_b.png':
+        break
+
 p_g, pos_x, pos_y = st_gender()
 if p_k == 'm_f_b.png':
     colourBar = (192, 109, 137)
-else:
-    colourBar = (50, 50, 50)
+elif p_k == 'm_s_b.png':
+    colourBar = (112, 215, 238)
+elif p_k == 'm_c_b.png':
+    colourBar = (219, 42, 97)
+elif p_k == 'm_d_b.png':
+    colourBar = (249, 213, 173)
 
 con = sqlite3.connect(bd)
 cur = con.cursor()
@@ -309,7 +327,7 @@ pygame.mixer.music.set_volume(0.03)
 pygame.mixer.music.play(-1)
 
 pink = Stats(screen, 'Heart.png', 724, 123, st_sprites)
-mix = Stats(screen, 'Leaf.png', 539, 115, st_sprites)
+mix = Stats(screen, st, 539, 115, st_sprites)
 
 rules()
 
@@ -321,6 +339,8 @@ f = False
 
 while running:
     for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            terminate()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 pygame.mixer.Sound.play(space)
