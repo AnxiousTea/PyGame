@@ -93,14 +93,17 @@ class Stats(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.i = 0.5
+        self.f = 50
 
     def DrawBar(self, pos, size, borderC, barC, ch, screen):
         pygame.draw.rect(screen, borderC, (*pos, *size), 1)
         self.i = self.i + ch
         if (size[1] - 6) * self.i >= size[1]:
             self.i = 1
+            self.f = 100
         elif (size[1] - 6) * self.i <= 0:
             self.i = 0
+            self.f = 0
         innerSize = (size[0] - 6, (size[1] - 6) * self.i)
         innerPos = (pos[0] + 3, (pos[1] + (size[1] - int(innerSize[1]) - 6) + 3))
         pygame.draw.rect(screen, barC, (*innerPos, *innerSize))
@@ -116,7 +119,7 @@ class NPC(pygame.sprite.Sprite):
         self.rect.y = 580
         self.dir = -1
         self.i = 0
-        self.velx = 6
+        self.velx = 8
         self.vely = 2
 
     def update(self):
@@ -152,7 +155,7 @@ class Text(pygame.sprite.Sprite):
         self.text = t.split("/n")
         self.image = load_image('text.png')
         self.rect = self.image.get_rect()
-        self.rect.x = 5
+        self.rect.x = -10
         self.rect.y = 510
         self.i = 0
         self.j = len(self.text)
@@ -164,7 +167,7 @@ class Text(pygame.sprite.Sprite):
     def update(self, txt):
         try:
             self.textSurf = self.font.render(self.text[len(self.text) - self.j], 1, 'black')
-            self.image.blit(self.textSurf, [45, 60 + self.i])
+            self.image.blit(self.textSurf, [45, 65 + self.i])
             self.i += 20
             self.j -= 1
             pygame.time.wait(200)

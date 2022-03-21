@@ -45,6 +45,9 @@ def st_kingdom():
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                sql = 'DELETE FROM Copy_base'
+                cur.execute(sql)
+                con.commit()
                 terminate()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
@@ -85,6 +88,9 @@ def st_gender():
     while True:
         for event_start in pygame.event.get():
             if event_start.type == pygame.QUIT:
+                sql = 'DELETE FROM Copy_base'
+                cur.execute(sql)
+                con.commit()
                 terminate()
             if event_start.type == pygame.KEYDOWN:
                 if event_start.key == pygame.K_SPACE:
@@ -116,6 +122,9 @@ def rules():
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                sql = 'DELETE FROM Copy_base'
+                cur.execute(sql)
+                con.commit()
                 terminate()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
@@ -126,7 +135,7 @@ def rules():
 
 def going_out(ind):
     res = cur.execute("""SELECT npc, offic_npc
-                            FROM Level1
+                            FROM Copy_base
                             WHERE id = ?""", (ind,)).fetchall()
     flag = False
     npc = NPC(res[0][0], 0, npc_sprites)
@@ -134,7 +143,13 @@ def going_out(ind):
     while go:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return
+                sql = 'DELETE FROM Copy_base'
+                cur.execute(sql)
+                con.commit()
+                terminate()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    menu()
         background_sprites.draw(screen)
         background_sprites.update()
         st_sprites.draw(screen)
@@ -159,7 +174,7 @@ def going_out(ind):
 def quest(ind, name):
     res = cur.execute("""SELECT text, smth_op, yes_m, yes_h,
                             yes_l, no_m, no_h, no_l, yes_text, no_text, closed
-                            FROM Level1
+                            FROM Copy_base
                             WHERE id = ?""", (ind,)).fetchall()
     text = Text(text_sprites, res[0][0], name)
     pygame.mixer.Sound.play(txt)
@@ -169,6 +184,9 @@ def quest(ind, name):
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                sql = 'DELETE FROM Copy_base'
+                cur.execute(sql)
+                con.commit()
                 terminate()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_y and flag is False:
@@ -187,13 +205,13 @@ def quest(ind, name):
                     text = Text(text_sprites, res[0][8], name)
                     pygame.mixer.Sound.play(txt)
                     if res[0][1] != 0:
-                        que = """UPDATE Level1 
+                        que = """UPDATE Copy_base 
                                         SET avi = 1
                                         WHERE id = ?"""
                         cur.execute(que, (res[0][1]),)
                         con.commit()
                     if res[0][10] != 0:
-                        que = """UPDATE Level1 
+                        que = """UPDATE Copy_base 
                                         SET avi = 0
                                         WHERE id = ?"""
                         cur.execute(que, (ind,))
@@ -219,6 +237,8 @@ def quest(ind, name):
                     pygame.mixer.Sound.play(space)
                     if flag is True:
                         return
+                if event.key == pygame.K_ESCAPE:
+                    menu()
         background_sprites.draw(screen)
         background_sprites.update()
         st_sprites.draw(screen)
@@ -232,6 +252,84 @@ def quest(ind, name):
         pygame.display.flip()
         clock.tick(40)
 
+def menu():
+    box1 = load_image('Main bx.png')
+    box = screen.blit(box1, [1272 / 2 - 550, 807 / 2 - 231])
+    x = load_image('Text_b_b.png')
+    x2 = load_image('Text_b_b.png')
+    k = screen.blit(x2, (721, 388))
+    q = screen.blit(x, (279, 388))
+    font = pygame.font.Font("data/planet benson 2.ttf", 50)
+    text = font.render("Your progress will not be saved", 1, [11, 32, 225])
+    screen.blit(text, [272, 300])
+    font = pygame.font.Font("data/planet benson 2.ttf", 50)
+    text = font.render("Quit", 1, (202, 11, 20))
+    screen.blit(text, (367, 435))
+    text = font.render("Continue", 1, (202, 11, 20))
+    screen.blit(text, (762, 435))
+    while True:
+        for event_start in pygame.event.get():
+            if event_start.type == pygame.QUIT:
+                sql = 'DELETE FROM Copy_base'
+                cur.execute(sql)
+                con.commit()
+                terminate()
+            if event_start.type == pygame.KEYDOWN:
+                if event_start.key == pygame.K_SPACE:
+                    pygame.mixer.Sound.play(space)
+            if event_start.type == pygame.MOUSEBUTTONDOWN:
+                if k.collidepoint(event_start.pos):
+                    pygame.mixer.Sound.play(click)
+                    return
+                if q.collidepoint(event_start.pos):
+                    pygame.mixer.Sound.play(click)
+                    sql = 'DELETE FROM Copy_base'
+                    cur.execute(sql)
+                    con.commit()
+                    terminate()
+        clock.tick(FPS)
+        pygame.display.flip()
+
+def game_over():
+    box1 = load_image('Main bx.png')
+    box = screen.blit(box1, [1272 / 2 - 550, 807 / 2 - 231])
+    x = load_image('Text_b_b.png')
+    x2 = load_image('Text_b_b.png')
+    k = screen.blit(x2, (721, 388))
+    q = screen.blit(x, (279, 388))
+    font = pygame.font.Font("data/planet benson 2.ttf", 70)
+    text = font.render("______GAME OVER______", 1, [11, 32, 225])
+    screen.blit(text, [370, 290])
+    font = pygame.font.Font("data/planet benson 2.ttf", 50)
+    text = font.render("Restart", 1, (202, 11, 20))
+    screen.blit(text, (328, 435))
+    text = font.render("Restart", 1, (202, 11, 20))
+    screen.blit(text, (774, 435))
+    while True:
+        for event_start in pygame.event.get():
+            if event_start.type == pygame.QUIT:
+                sql = 'DELETE FROM Copy_base'
+                cur.execute(sql)
+                con.commit()
+                terminate()
+            if event_start.type == pygame.KEYDOWN:
+                if event_start.key == pygame.K_SPACE:
+                    pygame.mixer.Sound.play(space)
+            if event_start.type == pygame.MOUSEBUTTONDOWN:
+                if k.collidepoint(event_start.pos):
+                    pygame.mixer.Sound.play(click)
+                    sql = 'DELETE FROM Copy_base'
+                    cur.execute(sql)
+                    con.commit()
+                    os.execv(sys.argv[0], sys.argv)
+                if q.collidepoint(event_start.pos):
+                    pygame.mixer.Sound.play(click)
+                    sql = 'DELETE FROM Copy_base'
+                    cur.execute(sql)
+                    con.commit()
+                    os.execv(sys.argv[0], sys.argv)
+        clock.tick(FPS)
+        pygame.display.flip()
 
 pygame.init()
 size = width, height = 1272, 807
@@ -263,18 +361,22 @@ rules()
 
 con = sqlite3.connect(bd)
 cur = con.cursor()
+req = 'INSERT INTO Copy_base SELECT * FROM Level1'
+cur.execute(req)
+con.commit()
+
 
 background(background_sprites, p_k, 0, -80)
 m_b(background_sprites)
 m_b(background_sprites)
 lst_m = list()
-background(background_sprites, 'castle.png', 0, -40)
+background(background_sprites, 'castle.png', 0, -61)
 background(background_sprites, p_g, pos_x, pos_y)
 
 pygame.mixer.music.load(mu)
 pygame.mixer.music.set_volume(0.03)
-pygame.mixer.music.play()
-
+pygame.mixer.music.play(-1)
+game_over()
 pink = Stats(screen, 'Heart.png', 724, 123, st_sprites)
 mix = Stats(screen, 'Leaf.png', 539, 115, st_sprites)
 
@@ -287,6 +389,9 @@ f = False
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            sql = 'DELETE FROM Copy_base'
+            cur.execute(sql)
+            con.commit()
             terminate()
         if event.type == pygame.MOUSEBUTTONDOWN:
             print(event.pos)
@@ -296,18 +401,22 @@ while running:
                 if f is False:
                     f = True
                     going_out(1)
-        if f is True:
-            pygame.mixer.Sound.play(space)
-            x = random.randrange(2, 3)
+            if event.key == pygame.K_ESCAPE:
+                menu()
+    if f is True:
+        pygame.mixer.Sound.play(space)
+        x = random.randrange(2, 70)
+        res = cur.execute("""SELECT avi
+                                    FROM Copy_base
+                                    WHERE id = ?""", (x,)).fetchall()
+        while res[0][0] != 1:
+            x = random.randrange(2, 70)
             res = cur.execute("""SELECT avi
-                                        FROM Level1
-                                        WHERE id = ?""", (x,)).fetchall()
-            while res[0][0] != 1:
-                x = random.randrange(2, 3)
-                res = cur.execute("""SELECT avi
-                                        FROM Level1
-                                        HERE id = ?""", (x,)).fetchall()
-            going_out(x)
+                                    FROM Copy_base
+                                    WHERE id = ?""", (x,)).fetchall()
+        going_out(x)
+    if pink.f == 0 or mix.f == 0:
+        game_over()
     background_sprites.update()
     background_sprites.draw(screen)
     st_sprites.draw(screen)
