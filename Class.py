@@ -1,7 +1,7 @@
 import pygame
 import os
 import random
-from time import *
+
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -15,6 +15,7 @@ def load_image(name, colorkey=None):
         image = image.convert_alpha()
     return image
 
+
 class Money(pygame.sprite.Sprite):
 
     def __init__(self, b):
@@ -22,8 +23,6 @@ class Money(pygame.sprite.Sprite):
         self.fire = [load_image('coin.png')]
         self.image = random.choice(self.fire)
         self.rect = self.image.get_rect()
-        a = (491, 598)
-        b = (705, 802)
         self.pile = 0
         self.velocity = [0, random.randrange(1, 10)]
         c = random.choices([529, 578])
@@ -50,6 +49,7 @@ class Money(pygame.sprite.Sprite):
     def no_m(self):
         self.kill()
 
+
 class background(pygame.sprite.Sprite):
     def __init__(self, b, name, x, y, *size):
         super().__init__(b)
@@ -60,8 +60,10 @@ class background(pygame.sprite.Sprite):
         if size:
             self.image = pygame.transform.scale(self.image, size)
 
+
 class m_b(pygame.sprite.Sprite):
     lst = [-1, 1]
+
     def __init__(self, b):
         super().__init__(b)
         self.image = load_image('cloud.png')
@@ -84,6 +86,7 @@ class m_b(pygame.sprite.Sprite):
                 self.rect.x = 1500
                 self.rect.y = random.randrange(0, 300)
         self.rect.x += self.dir
+
 
 class Stats(pygame.sprite.Sprite):
     def __init__(self, screen, name, x, y, b):
@@ -109,7 +112,6 @@ class Stats(pygame.sprite.Sprite):
         pygame.draw.rect(screen, barC, (*innerPos, *innerSize))
 
 
-
 class NPC(pygame.sprite.Sprite):
     def __init__(self, name, side, b):
         super().__init__(b)
@@ -119,7 +121,7 @@ class NPC(pygame.sprite.Sprite):
         self.rect.y = 580
         self.dir = -1
         self.i = 0
-        self.velx = 20
+        self.velx = 15
         self.vely = 5
 
     def update(self):

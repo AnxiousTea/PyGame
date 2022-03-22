@@ -5,12 +5,14 @@ import sqlite3
 from Class import background, m_b, NPC, Text, Money, Stats
 import random
 
+
 def terminate():
     sql = 'DELETE FROM Copy_base'
     cur.execute(sql)
     con.commit()
     pygame.quit()
     sys.exit()
+
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -24,10 +26,11 @@ def load_image(name, colorkey=None):
         image = image.convert_alpha()
     return image
 
+
 def st_kingdom():
-    bac = screen.blit(load_image('Bagr.png'), (0, 0))
+    screen.blit(load_image('Bagr.png'), (0, 0))
     box1 = load_image('Main bx.png')
-    box = screen.blit(box1, [1272 / 2 - 550, 807 / 2 - 231])
+    screen.blit(box1, [1272 / 2 - 550, 807 / 2 - 231])
     x = load_image('Text_b.png')
     ch_s = screen.blit(x, [428, 357])
     ch_w = screen.blit(x, [652, 357])
@@ -69,10 +72,11 @@ def st_kingdom():
         clock.tick(FPS)
         pygame.display.flip()
 
+
 def st_gender():
-    bac = screen.blit(load_image('Bagr.png'), (0, 0))
+    screen.blit(load_image('Bagr.png'), (0, 0))
     box1 = load_image('Main bx.png')
-    box = screen.blit(box1, [1272 / 2 - 550, 807 / 2 - 231])
+    screen.blit(box1, [1272 / 2 - 550, 807 / 2 - 231])
     x = load_image('Text_b_b.png')
     x2 = load_image('Text_b_b.png')
     k = screen.blit(x2, (721, 388))
@@ -102,10 +106,11 @@ def st_gender():
         clock.tick(FPS)
         pygame.display.flip()
 
+
 def rules():
-    bac = screen.blit(load_image('Bagr.png'), (0, 0))
+    screen.blit(load_image('Bagr.png'), (0, 0))
     box1 = load_image('Main bx.png')
-    box = screen.blit(box1, [1272 / 2 - 550, 807 / 2 - 231])
+    screen.blit(box1, [1272 / 2 - 550, 807 / 2 - 231])
     font = pygame.font.Font("data/planet benson 2.ttf", 50)
     txt = font.render("How to play?", 1, [11, 32, 225])
     screen.blit(txt, [500, 260])
@@ -126,6 +131,7 @@ def rules():
                     return
         pygame.display.flip()
         clock.tick(FPS)
+
 
 def going_out(ind):
     res = cur.execute("""SELECT npc, offic_npc
@@ -162,15 +168,14 @@ def going_out(ind):
         pygame.display.flip()
         clock.tick(40)
 
+
 def quest(ind, name):
     res = cur.execute("""SELECT text, smth_op, yes_m, yes_h,
                             yes_l, no_m, no_h, no_l, yes_text, no_text, closed
                             FROM Copy_base
                             WHERE id = ?""", (ind,)).fetchall()
-    text = Text(text_sprites, res[0][0], name)
+    Text(text_sprites, res[0][0], name)
     pygame.mixer.Sound.play(txt)
-    ch_p = 0
-    ch_m = 0
     flag = False
     while True:
         for event in pygame.event.get():
@@ -190,7 +195,7 @@ def quest(ind, name):
                     elif res[0][2] < 0:
                         for i in range(abs(res[0][2])):
                             lst_m[i].no_m()
-                    text = Text(text_sprites, res[0][8], name)
+                    Text(text_sprites, res[0][8], name)
                     pygame.mixer.Sound.play(txt)
                     if res[0][1] != 0:
                         que = """UPDATE Copy_base 
@@ -218,7 +223,7 @@ def quest(ind, name):
                     elif res[0][5] < 0:
                         for i in range(abs(res[0][5])):
                             lst_m[i].no_m()
-                    text = Text(text_sprites, res[0][9], name)
+                    Text(text_sprites, res[0][9], name)
                     pygame.mixer.Sound.play(txt)
                     flag = True
                 if event.key == pygame.K_SPACE:
@@ -240,9 +245,10 @@ def quest(ind, name):
         pygame.display.flip()
         clock.tick(40)
 
+
 def menu():
     box1 = load_image('Main bx.png')
-    box = screen.blit(box1, [1272 / 2 - 550, 807 / 2 - 231])
+    screen.blit(box1, [1272 / 2 - 550, 807 / 2 - 231])
     x = load_image('Text_b_b.png')
     x2 = load_image('Text_b_b.png')
     k = screen.blit(x2, (721, 388))
@@ -268,12 +274,36 @@ def menu():
                     return
                 if q.collidepoint(event_start.pos):
                     pygame.mixer.Sound.play(click)
-                    sql = 'DELETE FROM Copy_base'
-                    cur.execute(sql)
-                    con.commit()
                     terminate()
         clock.tick(FPS)
         pygame.display.flip()
+
+
+def game_over():
+    box1 = load_image('Main bx.png')
+    screen.blit(box1, [1272 / 2 - 550, 807 / 2 - 231])
+    x2 = load_image('Text_b_b.png')
+    k = screen.blit(x2, (500, 398))
+    font = pygame.font.Font("data/planet benson 2.ttf", 75)
+    text = font.render("_________GAME OVER_________", 1, [11, 32, 225])
+    screen.blit(text, [300, 285])
+    font = pygame.font.Font("data/planet benson 2.ttf", 60)
+    text = font.render("Quit", 1, (202, 11, 20))
+    screen.blit(text, (576, 440))
+    while True:
+        for event_start in pygame.event.get():
+            if event_start.type == pygame.QUIT:
+                terminate()
+            if event_start.type == pygame.KEYDOWN:
+                if event_start.key == pygame.K_SPACE:
+                    pygame.mixer.Sound.play(space)
+            if event_start.type == pygame.MOUSEBUTTONDOWN:
+                if k.collidepoint(event_start.pos):
+                    pygame.mixer.Sound.play(click)
+                    terminate()
+        clock.tick(FPS)
+        pygame.display.flip()
+
 
 pygame.init()
 size = width, height = 1272, 807
@@ -344,11 +374,11 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 pygame.mixer.Sound.play(space)
-                if f is False:
-                    f = True
-                    going_out(1)
             if event.key == pygame.K_ESCAPE:
                 menu()
+    if f is False:
+        f = True
+        going_out(1)
     if f is True:
         x = random.randrange(2, 70)
         res = cur.execute("""SELECT avi
@@ -360,6 +390,8 @@ while running:
                                     FROM Copy_base
                                     WHERE id = ?""", (x,)).fetchall()
         going_out(x)
+    if pink.f == 0 or mix.f == 0:
+        game_over()
     background_sprites.update()
     background_sprites.draw(screen)
     st_sprites.draw(screen)
