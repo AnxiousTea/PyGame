@@ -64,9 +64,9 @@ class background(pygame.sprite.Sprite):
 class m_b(pygame.sprite.Sprite):
     lst = [-1, 1]
 
-    def __init__(self, b):
+    def __init__(self, b, mov_bac):
         super().__init__(b)
-        self.image = load_image('cloud.png')
+        self.image = load_image(mov_bac)
         self.dir = random.choice(m_b.lst)
         del m_b.lst[m_b.lst.index(self.dir)]
         self.rect = self.image.get_rect()
