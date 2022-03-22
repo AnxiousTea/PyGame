@@ -119,8 +119,8 @@ class NPC(pygame.sprite.Sprite):
         self.rect.y = 580
         self.dir = -1
         self.i = 0
-        self.velx = 7
-        self.vely = 2
+        self.velx = 20
+        self.vely = 5
 
     def update(self):
         if self.i % 20 < 10:
